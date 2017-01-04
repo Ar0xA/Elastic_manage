@@ -9,13 +9,20 @@ from datetime import date
 from datetime import timedelta
 import os.path, sys, urllib2, requests, subprocess
 
-if len(sys.argv) < 2:
-    print ( "You need to specify the index name!" )
+if len(sys.argv) < 3:
+    print ( "You need to specify the index name and retention length in days!" )
     print ( "Where index format needs to be [name]-yyyy.mm.dd")
+    print ( "" )
+    print ( "python export_delete_ELDBindex.py dockbeat 14" )
     sys.exit ( 1 )
 
 #how many days do you want to save
-SAVEDATES = 14
+SAVEDATES = sys.argv[ 2 ]
+try:
+    SAVEDATES = int( SAVEDATES )
+except:
+    print ( "!! Parameter two needs to be an integer amount of days" )
+    sys.exit( 1 )
 
 #where is elasticdump located
 ELDUMP = "/usr/local/bin/elasticdump"
@@ -28,7 +35,7 @@ ELDBLOC = "http://127.0.0.1:9200"
 
 #whats the index name?
 #format name-yyyy.mm.dd
-ELINDEX = sys.argv[1]
+ELINDEX = sys.argv[ 1 ]
 
 #does the elasticdump program exist?
 if not os.path.exists( ELDUMP ):
